@@ -1,31 +1,15 @@
-import React from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SharedLayout } from 'pages/SharedLayout';
-import { RegisterPage } from 'pages/RegisterPage';
-import { LoginPage } from 'pages/LoginPage';
-import { ContactsPage } from 'pages/ContactsPage';
+import { HomePage } from 'pages/HomePage';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
 import { RestrictedRoute } from './RestrictedRoute/RestrictedRoute';
 import { PrivateRoute } from './PrivateRoute/PrivateRoute';
-import { HomePage } from 'pages/HomePage';
-import { useDispatch } from 'react-redux';
-import { useAuth } from '../redux/hooks/useAuth';
-import { useEffect } from 'react';
-import { refreshUser } from '../redux/auth/authOperations';
+import { ContactsPage } from 'pages/ContactsPage';
 
 export const App = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { isRefreshing } = useAuth();
-
-  useEffect(() => {
-    dispatch(refreshUser());
-    navigate('/contacts');
-  }, [dispatch, navigate]);
-
-  return isRefreshing ? (
-    <h1>Refreshing user... Please wait...</h1>
-  ) : (
+  return (
     <>
       <Routes>
         <Route path="/" element={<SharedLayout />}>
@@ -34,28 +18,24 @@ export const App = () => {
             path="/register"
             element={
               <RestrictedRoute
-                component={RegisterPage}
                 redirectTo="/contacts"
+                component={RegisterPage}
               />
             }
           />
           <Route
             path="/login"
             element={
-              <RestrictedRoute component={LoginPage} redirectTo="/contacts" />
+              <RestrictedRoute redirectTo="/contacts" component={LoginPage} />
             }
-          />
-          <Route
-            path="/contacts"
-            element={
-              <PrivateRoute component={ContactsPage} redirectTo="/login" />
-            }
-          />
-          <Route
-            path="/logout"
-            element={<PrivateRoute component={HomePage} redirectTo="/" />}
           />
         </Route>
+        <Route
+          path="/contacts"
+          element={
+            <PrivateRoute redirectTo="/login" component={ContactsPage} />
+          }
+        />
       </Routes>
     </>
   );

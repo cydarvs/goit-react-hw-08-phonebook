@@ -1,12 +1,12 @@
-import React from 'react';
 import { RegisterForm } from 'components/RegisterForm/RegisterForm';
 
-export const RegisterPage = () => {
+const RegisterPage = () => {
   return (
-    <div style={{ padding: '20px' }}>
-      {' '}
+    <div>
       <title>Register</title>
       <RegisterForm />
     </div>
   );
 };
+
+export default RegisterPage;
